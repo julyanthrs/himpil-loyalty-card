@@ -1,8 +1,7 @@
-import { CreditCard, FlaskConical, Gift, House, UserRound } from 'lucide-react';
+import { CreditCard, Gift, House, UserRound } from 'lucide-react';
 import { Suspense } from 'react';
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 import { useLoyalty } from '../../context/LoyaltyContext';
-import { isDemo } from '../../data';
 import { Logo } from '../brand/Logo';
 import { Avatar, Skeleton } from '../ui/primitives';
 import { NotificationsMenu } from './NotificationsMenu';
@@ -22,19 +21,6 @@ const MOBILE_TABS = [
   { to: '/rewards', label: 'Rewards', icon: Gift, match: (p: string) => p.startsWith('/rewards') || p.startsWith('/scan') },
   { to: '/profile', label: 'Profile', icon: UserRound, match: (p: string) => p.startsWith('/profile') },
 ];
-
-export function DemoBanner() {
-  if (!isDemo) return null;
-  return (
-    <div className="bg-espresso px-4 py-1.5 text-center text-[0.75rem] text-cream/90">
-      <FlaskConical className="mr-1.5 inline size-3.5 -translate-y-px" aria-hidden />
-      <strong className="font-medium text-cream">Demo mode</strong> — sample data saved only in this browser. Stamps aren’t real.{' '}
-      <Link to="/staff" className="underline underline-offset-2 hover:text-ivory">
-        Try the barista console
-      </Link>
-    </div>
-  );
-}
 
 function TopNav() {
   const { profile } = useLoyalty();
@@ -118,7 +104,6 @@ function BottomNav() {
 export function AppShell() {
   return (
     <div className="min-h-dvh">
-      <DemoBanner />
       <TopNav />
       <main className="pb-safe-nav mx-auto max-w-[1280px] px-4 pt-[max(1rem,env(safe-area-inset-top))] md:px-6 md:pt-8 md:pb-16">
         <Suspense fallback={<Skeleton className="h-96" />}>

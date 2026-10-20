@@ -3,7 +3,6 @@ import QrScanner from 'qr-scanner';
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { Link, Navigate, useLocation } from 'react-router-dom';
 import { Logo } from '../components/brand/Logo';
-import { DemoBanner } from '../components/layout/AppShell';
 import { StampGrid } from '../components/loyalty/StampGrid';
 import { Button } from '../components/ui/Button';
 import { Panel, Skeleton } from '../components/ui/primitives';
@@ -259,7 +258,6 @@ export default function Staff() {
 
   return (
     <div className="min-h-dvh">
-      <DemoBanner />
       <header className="mx-auto flex max-w-[1100px] items-center justify-between px-4 py-5 md:px-6">
         <div className="flex items-center gap-4">
           <Logo variant="inline" size={24} />

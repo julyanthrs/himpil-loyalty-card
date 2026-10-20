@@ -35,7 +35,7 @@ export default function Scan() {
   return (
     <div className="animate-fade-in relative">
       {/* Dark espresso band behind the header and the top of the QR panel. */}
-      <div className="absolute -inset-x-4 -top-4 h-[19rem] bg-espresso md:inset-x-0 md:top-0 md:h-[22rem] md:rounded-[2rem]" aria-hidden />
+      <div className="absolute -inset-x-4 -top-[max(1rem,env(safe-area-inset-top))] h-[19rem] bg-espresso md:inset-x-0 md:top-0 md:h-[22rem] md:rounded-[2rem]" aria-hidden />
 
       <div className="relative md:px-10 md:pt-8">
         <PageHeader title="Scan to Collect" back={false} dark />

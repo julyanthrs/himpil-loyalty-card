@@ -19,10 +19,10 @@ npm run build      # type-check + production build (with service worker)
 |---|---|---|
 | Enabled when | `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` are empty | both are set in `.env` |
 | Data | Sample member "Alex Rivera" (7/9 stamps), stored in this browser only | Supabase Postgres |
-| Labeling | Banner on every page: "Demo mode — Stamps aren't real" | none |
+| Labeling | Notice on the sign-in and register pages; "demo card" and "Reset demo data" on Profile | none |
 | Barista console | Open to anyone at `/staff` (to try the flow) | Only users in `staff_roles` |
 
-Demo tip: open `/scan` in one tab and `/staff` in another. Stamps added in the console appear on the customer's card live.
+Demo tip: open `/scan` in one tab and `/staff` in another (or Profile → Open console). Stamps added in the console appear on the customer's card live.
 
 ## Going live with Supabase
 
@@ -73,7 +73,7 @@ Re-run the script if the card artwork changes.
 
 ## Home hero photo
 
-The hero uses Himpil's own photo, `design/photo-source/hero-himpil.webp`. It has the logo printed on it, and the hero renders the logo itself, so `node scripts/build-hero.mjs` removes the printed one. It fills that spot from the surrounding blurred background and writes `public/images/hero-himpil*.webp`.
+The hero uses Himpil's own photo, `design/photo-source/hero-himpil.webp`. `node scripts/build-hero.mjs` removes the logo printed on it (filling from the surrounding blurred background) and writes `public/images/hero-himpil*.webp`. The hero then draws the vector logo back in the same spot and printed color (`LogoOnPhoto`). It stays crisp and follows the photo's crop at every screen size.
 
 ## Logo
 

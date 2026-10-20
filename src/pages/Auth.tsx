@@ -3,7 +3,6 @@ import { useState, type FormEvent, type ReactNode } from 'react';
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { Botanical } from '../components/brand/Botanical';
 import { Logo } from '../components/brand/Logo';
-import { DemoBanner } from '../components/layout/AppShell';
 import { Button } from '../components/ui/Button';
 import { useAuth } from '../context/AuthContext';
 import { isDemo, service } from '../data';
@@ -12,7 +11,6 @@ import { errorMessage } from '../lib/loyalty';
 function AuthLayout({ title, subtitle, children }: { title: string; subtitle: string; children: ReactNode }) {
   return (
     <div className="flex min-h-dvh flex-col">
-      <DemoBanner />
       <div className="mx-auto grid w-full max-w-[1280px] flex-1 gap-8 p-4 md:p-6 lg:grid-cols-2 lg:gap-12">
         <div className="relative hidden overflow-hidden rounded-[2rem] lg:block">
           <img src="/images/together.webp" alt="Friends sharing coffee" className="absolute inset-0 size-full object-cover" />
