@@ -10,7 +10,8 @@ import type { LoyaltyService } from './service';
  * the barista: changes sync between tabs through the `storage` event.
  */
 
-const KEY = 'himpil-demo-v1';
+// v2: sample member now has three completed cards for the Rewards stack.
+const KEY = 'himpil-demo-v2';
 const CHANGE_EVENT = 'himpil-demo-change';
 const COOLDOWN_MS = 4000;
 
@@ -35,23 +36,24 @@ function at(daysAgo: number, hour: number, minute: number) {
 function seed(fullName = 'Alex Rivera', email = 'alex@example.com', empty = false): DemoState {
   const activity: ActivityItem[] = [];
   if (!empty) {
-    // Previous cycle: nine stamps, then the free drink.
-    const cycle1: [number, number, number, string][] = [
-      [61, 8, 12, 'Caffè Latte'], [57, 9, 40, 'Americano'], [53, 7, 55, 'Cappuccino'],
-      [49, 14, 5, 'Spanish Latte'], [45, 10, 30, 'Iced Coffee'], [41, 8, 45, 'Caffè Latte'],
-      [38, 15, 20, 'Flat White'], [34, 9, 10, 'Iced Americano'], [31, 11, 2, 'Spanish Latte'],
+    // Three completed cards (nine stamps, then the free drink), then the current card with seven stamps.
+    const drinks = MENU;
+    const cycles: { start: number; free?: [number, string] }[] = [
+      { start: 155, free: [119, 'Cappuccino'] },
+      { start: 112, free: [72, 'Iced Coffee'] },
+      { start: 61, free: [27, 'Spanish Latte'] },
+      { start: 24 },
     ];
-    cycle1.forEach(([d, h, m, drink], i) =>
-      activity.push({ id: `c1-${i}`, kind: 'stamp', drink, stamps: 1, cycle: 1, createdAt: at(d, h, m) }));
-    activity.push({ id: 'r1', kind: 'redemption', drink: 'Spanish Latte', stamps: 0, cycle: 1, createdAt: at(27, 9, 18) });
-    // Current cycle: seven stamps.
-    const cycle2: [number, number, number, string][] = [
-      [24, 8, 30, 'Cappuccino'], [20, 13, 15, 'Caffè Latte'], [16, 9, 5, 'Iced Coffee'],
-      [11, 10, 45, 'Flat White'], [6, 9, 3, 'Spanish Latte'], [3, 14, 15, 'Iced Americano'],
-      [0, 10, 24, 'Caffè Latte'],
-    ];
-    cycle2.forEach(([d, h, m, drink], i) =>
-      activity.push({ id: `c2-${i}`, kind: 'stamp', drink, stamps: 1, cycle: 2, createdAt: at(d, h, m) }));
+    cycles.forEach(({ start, free }, c) => {
+      const cycle = c + 1;
+      const count = free ? STAMPS_PER_REWARD : 7;
+      for (let i = 0; i < count; i++) {
+        const daysAgo = Math.round(start - (i * (start - (free ? free[0] + 4 : 0))) / (count - 1));
+        const drink = drinks[(c * 3 + i * 5) % drinks.length]!;
+        activity.push({ id: `c${cycle}-${i}`, kind: 'stamp', drink, stamps: 1, cycle, createdAt: at(daysAgo, 8 + ((i * 3 + c) % 8), (i * 17 + c * 11) % 60) });
+      }
+      if (free) activity.push({ id: `r${cycle}`, kind: 'redemption', drink: free[1], stamps: 0, cycle, createdAt: at(free[0], 9, 18) });
+    });
     activity.reverse();
   }
   return {
@@ -61,13 +63,13 @@ function seed(fullName = 'Alex Rivera', email = 'alex@example.com', empty = fals
       fullName,
       email,
       avatarUrl: null,
-      memberSince: empty ? new Date().toISOString() : at(64, 9, 0),
+      memberSince: empty ? new Date().toISOString() : at(158, 9, 0),
       notifyStamps: true,
       notifyOffers: false,
     },
     account: empty
       ? { memberCode: DEMO_CODE, stamps: 0, cycle: 1, totalStamps: 0, totalRedeemed: 0 }
-      : { memberCode: DEMO_CODE, stamps: 7, cycle: 2, totalStamps: 16, totalRedeemed: 1 },
+      : { memberCode: DEMO_CODE, stamps: 7, cycle: 4, totalStamps: 34, totalRedeemed: 3 },
     activity,
     processedRequests: [],
     lastStampAt: 0,

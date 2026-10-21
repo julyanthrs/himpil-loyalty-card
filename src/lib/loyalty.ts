@@ -31,6 +31,42 @@ export function rewardStatus(account: LoyaltyAccount, activity: ActivityItem[]):
   return 'locked';
 }
 
+/** A card in the Rewards stack: the current card (any progress) or one already exchanged for a free drink. */
+export interface StackedCard {
+  cycle: number;
+  stamps: number;
+  current: boolean;
+  /** First and ninth stamp, when that history is still loaded. */
+  startedAt: string | null;
+  completedAt: string | null;
+  redeemed: { drink: string; at: string } | null;
+}
+
+/**
+ * The current card first, then completed cards newest first. Built from the activity feed,
+ * so no extra backend query is needed.
+ */
+export function stackedCards(account: LoyaltyAccount, activity: ActivityItem[]): StackedCard[] {
+  const stampsByCycle = new Map<number, string[]>();
+  for (const a of activity) {
+    if (a.kind !== 'stamp') continue;
+    const list = stampsByCycle.get(a.cycle) ?? [];
+    for (let i = 0; i < a.stamps; i++) list.push(a.createdAt);
+    stampsByCycle.set(a.cycle, list);
+  }
+  const span = (cycle: number) => {
+    const dates = (stampsByCycle.get(cycle) ?? []).sort();
+    return { startedAt: dates[0] ?? null, completedAt: dates.length >= STAMPS_PER_REWARD ? dates[STAMPS_PER_REWARD - 1]! : null };
+  };
+
+  const completed: StackedCard[] = activity
+    .filter((a) => a.kind === 'redemption' && a.cycle !== account.cycle)
+    .map((r) => ({ cycle: r.cycle, stamps: STAMPS_PER_REWARD, current: false, ...span(r.cycle), redeemed: { drink: r.drink, at: r.createdAt } }))
+    .sort((a, b) => b.cycle - a.cycle);
+  const current: StackedCard = { cycle: account.cycle, stamps: account.stamps, current: true, ...span(account.cycle), redeemed: null };
+  return [current, ...completed];
+}
+
 export function progressMessage(stamps: number) {
   const left = stampsRemaining(stamps);
   if (left === 0) return 'Your free drink is ready!';

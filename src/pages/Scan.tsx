@@ -1,6 +1,7 @@
 import { ChevronRight, Gift } from 'lucide-react';
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { BaybayinPattern } from '../components/brand/Backdrop';
 import { ActivityList } from '../components/loyalty/ActivityList';
 import { QrPanel } from '../components/loyalty/QrPanel';
 import { PageHeader, Panel, SectionTitle, Skeleton, TextLink } from '../components/ui/primitives';
@@ -35,7 +36,9 @@ export default function Scan() {
   return (
     <div className="animate-fade-in relative">
       {/* Dark espresso band behind the header and the top of the QR panel. */}
-      <div className="absolute -inset-x-4 -top-[max(1rem,env(safe-area-inset-top))] h-[19rem] bg-espresso md:inset-x-0 md:top-0 md:h-[22rem] md:rounded-[2rem]" aria-hidden />
+      <div className="absolute -inset-x-4 -top-[max(1rem,env(safe-area-inset-top))] h-[19rem] overflow-hidden bg-espresso md:inset-x-0 md:top-0 md:h-[22rem] md:rounded-[2rem]" aria-hidden>
+        <BaybayinPattern className="text-cream/[0.07]" />
+      </div>
 
       <div className="relative md:px-10 md:pt-8">
         <PageHeader title="Scan to Collect" back={false} dark />
@@ -46,7 +49,11 @@ export default function Scan() {
           {account ? <QrPanel memberCode={account.memberCode} /> : <Skeleton className="h-[28rem] rounded-[1.6rem]" />}
           {account && (
             <p className="mt-3 text-center text-xs text-subtle">
-              Camera not working? Member code <span className="font-mono tracking-wider text-mocha">{account.memberCode}</span>
+              Scanner not working? Your member code is in{' '}
+              <Link to="/profile" className="font-medium text-mocha underline underline-offset-2">
+                Profile
+              </Link>
+              .
             </p>
           )}
         </div>

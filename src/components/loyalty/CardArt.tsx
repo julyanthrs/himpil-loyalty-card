@@ -17,7 +17,7 @@ export function CardFrontArt() {
  * Back of the physical card (original artwork). Collected cups are revealed from a pre-filled copy
  * of the same artwork, clipped to each cup, so the original line drawings stay untouched.
  */
-export function CardBackArt({ stamps, popIndex }: { stamps: number; popIndex?: number }) {
+export function CardBackArt({ stamps, popIndex, redeemed = false }: { stamps: number; popIndex?: number; redeemed?: boolean }) {
   const ready = stamps >= STAMPS_PER_REWARD;
   return (
     <div className="@container relative size-full overflow-hidden bg-[#c4a98c]">
@@ -40,7 +40,7 @@ export function CardBackArt({ stamps, popIndex }: { stamps: number; popIndex?: n
           />
         );
       })}
-      {ready && (
+      {ready && !redeemed && (
         <span
           className="pointer-events-none absolute animate-pulse rounded-[18%] ring-[0.5cqw] ring-cream/80"
           style={{

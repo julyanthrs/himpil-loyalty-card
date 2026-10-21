@@ -2,6 +2,7 @@ import { Camera, CameraOff, Gift, KeyRound, LogOut, Minus, Plus, ShieldAlert, St
 import QrScanner from 'qr-scanner';
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { Link, Navigate, useLocation } from 'react-router-dom';
+import { Backdrop, wordForPath } from '../components/brand/Backdrop';
 import { Logo } from '../components/brand/Logo';
 import { StampGrid } from '../components/loyalty/StampGrid';
 import { Button } from '../components/ui/Button';
@@ -258,6 +259,7 @@ export default function Staff() {
 
   return (
     <div className="min-h-dvh">
+      <Backdrop word={wordForPath('/staff')} />
       <header className="mx-auto flex max-w-[1100px] items-center justify-between px-4 py-5 md:px-6">
         <div className="flex items-center gap-4">
           <Logo variant="inline" size={24} />

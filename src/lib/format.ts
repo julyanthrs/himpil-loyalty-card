@@ -5,6 +5,7 @@ const monthYear = new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numer
 
 export const formatDateTime = (iso: string) => `${dateLong.format(new Date(iso))} · ${time.format(new Date(iso))}`;
 export const formatDateTimeShort = (iso: string) => `${dateShort.format(new Date(iso))} • ${time.format(new Date(iso))}`;
+export const formatDate = (iso: string) => dateShort.format(new Date(iso));
 export const formatMonthYear = (iso: string) => monthYear.format(new Date(iso));
 
 export function initials(name: string) {

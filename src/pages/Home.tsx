@@ -1,10 +1,9 @@
-import { ChevronRight, Gift, Scan } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { Botanical } from '../components/brand/Botanical';
 import { LogoOnPhoto, PHOTO_ASPECT } from '../components/brand/Logo';
 import { NotificationsMenu } from '../components/layout/NotificationsMenu';
 import { ActivityList } from '../components/loyalty/ActivityList';
 import { CardPreview } from '../components/loyalty/CardPreview';
+import { QrPanel } from '../components/loyalty/QrPanel';
 import { SectionTitle, Skeleton, TextLink } from '../components/ui/primitives';
 import { useLoyalty } from '../context/LoyaltyContext';
 
@@ -18,13 +17,14 @@ import { useLoyalty } from '../context/LoyaltyContext';
 function Hero() {
   return (
     <section
-      className="relative -mx-4 -mt-[max(1rem,env(safe-area-inset-top))] h-[22rem] overflow-hidden bg-[#2a1a10] [--photo-h:27.5rem] md:mx-0 md:mt-0 md:h-[26rem] md:rounded-[2rem] md:[--photo-h:100cqh]"
+      className="relative -mx-4 -mt-[max(1rem,env(safe-area-inset-top))] h-[22rem] overflow-hidden bg-[#2a1a10] [--photo-h:27.5rem] [--photo-w:100%] md:mx-0 md:mt-0 md:h-[26rem] md:rounded-[2rem] md:[--photo-h:100cqh] md:[--photo-w:115%]"
       style={{ containerType: 'size' }}
     >
       <h1 className="sr-only">Himpil</h1>
+      {/* Wider screens: photo slightly wider than the hero so the crop can favour the drinks on the right. */}
       <div
-        className="absolute top-[80%] left-[18%] -translate-x-[18%] -translate-y-[80%] md:top-[47%] md:left-1/2 md:-translate-x-1/2 md:-translate-y-[47%]"
-        style={{ width: `max(100%, calc(var(--photo-h) * ${PHOTO_ASPECT}))`, aspectRatio: String(PHOTO_ASPECT) }}
+        className="absolute top-[80%] left-[28%] -translate-x-[28%] -translate-y-[80%] md:top-[47%] md:left-[70%] md:-translate-x-[70%] md:-translate-y-[47%]"
+        style={{ width: `max(var(--photo-w), calc(var(--photo-h) * ${PHOTO_ASPECT}))`, aspectRatio: String(PHOTO_ASPECT) }}
       >
         <img
           src="/images/hero-himpil-sm.webp"
@@ -43,47 +43,19 @@ function Hero() {
   );
 }
 
-function QuickActions() {
-  const item =
-    'group flex h-[4.25rem] items-center gap-5 rounded-2xl px-8 font-serif text-[1.3rem] transition duration-200 hover:-translate-y-0.5 hover:shadow-lift';
+/** The member's QR code: the barista scans it in the staff console to add stamps. */
+function MemberQr() {
+  const { account } = useLoyalty();
   return (
-    <div className="grid gap-3 px-2.5 sm:grid-cols-2">
-      <Link to="/scan" className={`${item} bg-espresso text-ivory shadow-soft`}>
-        <Scan className="size-7" strokeWidth={1.6} aria-hidden />
-        <span className="flex-1">Scan to Collect</span>
-        <ChevronRight className="size-6 opacity-90 transition group-hover:translate-x-0.5" strokeWidth={1.6} aria-hidden />
-      </Link>
-      <Link to="/rewards" className={`${item} bg-ivory text-espresso shadow-soft ring-1 ring-latte/50`}>
-        <Gift className="size-7" strokeWidth={1.5} aria-hidden />
-        <span className="flex-1">View Rewards</span>
-        <ChevronRight className="size-6 opacity-90 transition group-hover:translate-x-0.5" strokeWidth={1.6} aria-hidden />
-      </Link>
-    </div>
-  );
-}
-
-function PromoBanner() {
-  return (
-    <section className="relative mx-2.5 h-40 overflow-hidden rounded-[1.5rem] bg-espresso shadow-soft md:h-48" aria-label="Good People Better Coffee">
-      <img
-        src="/images/promo-iced-sm.webp"
-        srcSet="/images/promo-iced-sm.webp 800w, /images/promo-iced.webp 1200w"
-        sizes="(min-width: 1024px) 40vw, 90vw"
-        alt=""
-        loading="lazy"
-        className="absolute inset-y-0 right-0 h-full w-[65%] object-cover [mask-image:linear-gradient(to_right,transparent,black_40%)]"
-      />
-      <Botanical className="pointer-events-none absolute -top-8 left-[30%] w-32 text-cream/15" />
-      <div className="relative flex h-full flex-col justify-center px-8">
-        <p className="font-serif text-[1.6rem] leading-[1.1] text-cream md:text-[1.8rem]">
-          Good
-          <br />
-          People
-          <br />
-          Better Coffee
-        </p>
-        <span className="mt-3 h-0.5 w-8 bg-cream/80" />
-      </div>
+    <section className="px-2.5" aria-label="Your member QR code">
+      {account ? <QrPanel memberCode={account.memberCode} showLogo={false} /> : <Skeleton className="h-[22rem] rounded-[1.6rem]" />}
+      <p className="mt-3 text-center text-xs text-subtle">
+        Scanner not working? Your member code is in{' '}
+        <Link to="/profile" className="font-medium text-mocha underline underline-offset-2">
+          Profile
+        </Link>
+        .
+      </p>
     </section>
   );
 }
@@ -94,12 +66,9 @@ export default function Home() {
     <div className="animate-fade-in">
       <Hero />
       <div className="relative z-10 -mx-1.5 -mt-14 grid gap-4 md:mx-0 lg:-mt-16 lg:grid-cols-12 lg:gap-x-8 lg:gap-y-6">
-        <div className="space-y-4 lg:col-span-7 lg:row-span-2 lg:-ml-2.5">
+        <div className="space-y-4 lg:col-span-7 lg:-ml-2.5">
           <CardPreview />
-          <QuickActions />
-        </div>
-        <div className="lg:col-span-5 lg:col-start-8 lg:row-start-2">
-          <PromoBanner />
+          <MemberQr />
         </div>
         <section className="px-2.5 pt-2 lg:col-span-5 lg:col-start-8 lg:row-start-1 lg:mt-20">
           <SectionTitle title="Recent Activity" action={<TextLink to="/activity">See All</TextLink>} />

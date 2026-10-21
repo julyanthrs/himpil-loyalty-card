@@ -15,6 +15,7 @@
 
   --font-serif: 'Playfair Display Variable', Georgia, 'Times New Roman', serif;
   --font-sans: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-baybayin: 'Noto Sans Tagalog', sans-serif;
 
   --shadow-soft: 0 1px 2px rgb(62 36 22 / 0.05), 0 6px 20px -8px rgb(62 36 22 / 0.16);
   --shadow-lift: 0 2px 4px rgb(62 36 22 / 0.06), 0 14px 32px -10px rgb(62 36 22 / 0.26);
@@ -49,6 +50,11 @@
   body {
     @apply bg-cream font-sans text-ink antialiased;
     min-height: 100dvh;
+    /* Warm light from the top over a faint sawali (woven bamboo) wall. */
+    background-image:
+      radial-gradient(120% 60% at 50% 0%, rgb(255 252 246 / 0.7), transparent 70%),
+      url('/brand/sawali.svg');
+    background-size: auto, 40px 40px;
   }
   h1, h2, h3 {
     @apply font-serif text-espresso;
@@ -76,7 +82,8 @@
     @apply text-[0.68rem] font-medium tracking-[0.22em] uppercase text-subtle;
   }
   .pb-safe-nav {
-    padding-bottom: calc(5.5rem + env(safe-area-inset-bottom));
+    /* Floating nav: 4rem pill + its bottom offset + breathing room. */
+    padding-bottom: calc(6.5rem + env(safe-area-inset-bottom));
   }
 }
 

@@ -1,7 +1,7 @@
 import { FlaskConical, MailCheck } from 'lucide-react';
 import { useState, type FormEvent, type ReactNode } from 'react';
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
-import { Botanical } from '../components/brand/Botanical';
+import { Backdrop, BaybayinPattern, PageWordNote, wordForPath } from '../components/brand/Backdrop';
 import { Logo } from '../components/brand/Logo';
 import { Button } from '../components/ui/Button';
 import { useAuth } from '../context/AuthContext';
@@ -9,12 +9,15 @@ import { isDemo, service } from '../data';
 import { errorMessage } from '../lib/loyalty';
 
 function AuthLayout({ title, subtitle, children }: { title: string; subtitle: string; children: ReactNode }) {
+  const word = wordForPath(useLocation().pathname);
   return (
     <div className="flex min-h-dvh flex-col">
+      <Backdrop word={word} />
       <div className="mx-auto grid w-full max-w-[1280px] flex-1 gap-8 p-4 md:p-6 lg:grid-cols-2 lg:gap-12">
         <div className="relative hidden overflow-hidden rounded-[2rem] lg:block">
           <img src="/images/together.webp" alt="Friends sharing coffee" className="absolute inset-0 size-full object-cover" />
           <div className="absolute inset-0 bg-espresso/45" />
+          <BaybayinPattern className="text-cream/[0.08]" />
           <div className="relative flex h-full flex-col justify-between p-12 text-cream">
             <Logo tone="light" size={48} className="self-start" />
             <div>
@@ -24,7 +27,6 @@ function AuthLayout({ title, subtitle, children }: { title: string; subtitle: st
           </div>
         </div>
         <div className="relative flex items-center justify-center py-8">
-          <Botanical className="pointer-events-none absolute -top-4 -right-16 w-60 text-roasted/25" />
           <div className="relative w-full max-w-sm">
             <div className="mb-8 flex justify-center lg:hidden">
               <Logo size={52} />
@@ -32,6 +34,7 @@ function AuthLayout({ title, subtitle, children }: { title: string; subtitle: st
             <h1 className="text-center text-[2rem] font-medium lg:text-left">{title}</h1>
             <p className="mt-2 text-center text-subtle lg:text-left">{subtitle}</p>
             <div className="mt-8">{children}</div>
+            <PageWordNote word={word} className="mt-12" />
           </div>
         </div>
       </div>

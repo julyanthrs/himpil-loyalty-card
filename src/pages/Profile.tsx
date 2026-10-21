@@ -1,4 +1,4 @@
-import { Check, LogOut, Pencil, RotateCcw, ScanLine, X } from 'lucide-react';
+import { Check, Copy, IdCard, LogOut, Pencil, RotateCcw, ScanLine, X } from 'lucide-react';
 import { useEffect, useState, type FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, ButtonLink } from '../components/ui/Button';
@@ -38,6 +38,15 @@ export default function Profile() {
     await updateProfile({ fullName: trimmed.slice(0, 80) });
     setEditing(false);
     toast('Name updated.');
+  };
+
+  const copyCode = async () => {
+    try {
+      await navigator.clipboard.writeText(account.memberCode);
+      toast('Member code copied.');
+    } catch {
+      toast('Couldn’t copy. Read the code to the barista instead.', 'info');
+    }
   };
 
   const logout = async () => {
@@ -106,6 +115,23 @@ export default function Profile() {
         </Panel>
 
         <div className="space-y-6">
+          <Panel className="px-6 py-5 md:px-8">
+            <h2 className="flex items-center gap-2.5 text-xl font-medium">
+              <IdCard className="size-5 text-mocha" strokeWidth={1.6} aria-hidden /> Member code
+            </h2>
+            <p className="mt-1 text-sm text-subtle">
+              Your customer ID. If the scanner isn’t working, tell the barista this code and they can enter it instead.
+            </p>
+            <div className="mt-4 flex items-center gap-3 rounded-2xl border border-latte/70 bg-cream px-4 py-3">
+              <p className="min-w-0 flex-1 font-mono text-[1.25rem] tracking-[0.08em] whitespace-nowrap text-espresso sm:text-2xl sm:tracking-[0.14em]" aria-label={`Member code ${account.memberCode.split('').join(' ')}`}>
+                {account.memberCode}
+              </p>
+              <Button variant="secondary" onClick={() => void copyCode()} className="shrink-0 max-sm:px-3" aria-label="Copy member code">
+                <Copy className="size-4" aria-hidden /> <span className="max-sm:sr-only">Copy</span>
+              </Button>
+            </div>
+          </Panel>
+
           <Panel className="px-6 py-4 md:px-8">
             <h2 className="pt-2 text-xl font-medium">Notifications</h2>
             <div className="divide-y divide-latte/60">

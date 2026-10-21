@@ -1,7 +1,8 @@
 import { CreditCard, Gift, House, UserRound } from 'lucide-react';
-import { Suspense } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 import { useLoyalty } from '../../context/LoyaltyContext';
+import { Backdrop, PageWordNote, wordForPath } from '../brand/Backdrop';
 import { Logo } from '../brand/Logo';
 import { Avatar, Skeleton } from '../ui/primitives';
 import { NotificationsMenu } from './NotificationsMenu';
@@ -21,6 +22,43 @@ const MOBILE_TABS = [
   { to: '/rewards', label: 'Rewards', icon: Gift, match: (p: string) => p.startsWith('/rewards') || p.startsWith('/scan') },
   { to: '/profile', label: 'Profile', icon: UserRound, match: (p: string) => p.startsWith('/profile') },
 ];
+
+/** Pages whose top is a dark photo or band that already runs under the phone's status bar. */
+const DARK_TOP = ['/', '/scan'];
+const DARK_TINT = '#2a1a10';
+const LIGHT_TINT = '#F6EFE4';
+
+/**
+ * Phone status-bar area. Browsers tint it with theme-color: dark over the Home photo and the Scan band,
+ * cream elsewhere. In the installed app the page draws under a translucent status bar with white text,
+ * so light pages (and dark-top pages once scrolled past the dark area) get an espresso strip behind it.
+ */
+function StatusBar() {
+  const { pathname } = useLocation();
+  const darkTop = DARK_TOP.includes(pathname);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    if (!darkTop) return;
+    const onScroll = () => setScrolled(window.scrollY > 260);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [darkTop]);
+
+  useEffect(() => {
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', darkTop ? DARK_TINT : LIGHT_TINT);
+  }, [darkTop]);
+
+  return (
+    <div
+      aria-hidden
+      className={`pointer-events-none fixed inset-x-0 top-0 z-50 h-[env(safe-area-inset-top)] bg-espresso transition-opacity duration-300 md:hidden ${
+        darkTop && !scrolled ? 'opacity-0' : 'opacity-100'
+      }`}
+    />
+  );
+}
 
 function TopNav() {
   const { profile } = useLoyalty();
@@ -70,10 +108,10 @@ function BottomNav() {
   const { pathname } = useLocation();
   return (
     <nav
-      className="fixed inset-x-0 bottom-0 z-40 border-t border-latte/70 bg-ivory pb-[env(safe-area-inset-bottom)] md:hidden"
+      className="fixed inset-x-4 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-40 mx-auto max-w-md rounded-full border border-latte/70 bg-ivory/95 shadow-lift backdrop-blur-md md:hidden"
       aria-label="Main"
     >
-      <ul className="mx-auto grid h-[4.25rem] max-w-md grid-cols-4">
+      <ul className="grid h-16 grid-cols-4 px-2">
         {MOBILE_TABS.map(({ to, label, icon: Icon, match }) => {
           const active = match(pathname);
           return (
@@ -102,13 +140,19 @@ function BottomNav() {
 }
 
 export function AppShell() {
+  const { pathname } = useLocation();
+  const word = wordForPath(pathname);
   return (
     <div className="min-h-dvh">
+      {/* Home opens on its photo, so the corner branches would only peek out around it. */}
+      <Backdrop word={word} branches={pathname !== '/'} />
+      <StatusBar />
       <TopNav />
       <main className="pb-safe-nav mx-auto max-w-[1280px] px-4 pt-[max(1rem,env(safe-area-inset-top))] md:px-6 md:pt-8 md:pb-16">
         <Suspense fallback={<Skeleton className="h-96" />}>
           <Outlet />
         </Suspense>
+        <PageWordNote word={word} className="mt-16" />
       </main>
       <BottomNav />
     </div>

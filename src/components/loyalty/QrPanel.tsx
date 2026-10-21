@@ -20,7 +20,7 @@ function BeanOutline({ size, rot, style }: { size: number; rot: number; style: R
 }
 
 /** The customer's personal code. Scanning it only identifies the card — stamps are added by staff. */
-export function QrPanel({ memberCode }: { memberCode: string }) {
+export function QrPanel({ memberCode, showLogo = true }: { memberCode: string; showLogo?: boolean }) {
   return (
     <div className="rounded-[1.6rem] bg-ivory p-2.5 shadow-card">
       <div className="relative overflow-hidden rounded-[1.25rem] bg-[#efe4d3] px-6 pt-6 pb-6 text-center md:pt-8 md:pb-8">
@@ -30,8 +30,8 @@ export function QrPanel({ memberCode }: { memberCode: string }) {
           ))}
         </div>
         <div className="relative">
-          <Logo size={34} />
-          <div className="mx-auto mt-4 w-fit rounded-2xl bg-white p-4 shadow-soft md:p-5">
+          {showLogo && <Logo size={34} />}
+          <div className={`mx-auto w-fit rounded-2xl bg-white p-4 shadow-soft md:p-5 ${showLogo ? 'mt-4' : ''}`}>
             <QRCodeSVG
               value={qrPayload(memberCode)}
               size={220}

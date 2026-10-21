@@ -18,7 +18,7 @@ npm run build      # type-check + production build (with service worker)
 | | Demo mode (default) | Live mode |
 |---|---|---|
 | Enabled when | `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` are empty | both are set in `.env` |
-| Data | Sample member "Alex Rivera" (7/9 stamps), stored in this browser only | Supabase Postgres |
+| Data | Sample member "Alex Rivera" (7/9 stamps, three completed cards), stored in this browser only | Supabase Postgres |
 | Labeling | Notice on the sign-in and register pages; "demo card" and "Reset demo data" on Profile | none |
 | Barista console | Open to anyone at `/staff` (to try the flow) | Only users in `staff_roles` |
 
@@ -79,6 +79,15 @@ The hero uses Himpil's own photo, `design/photo-source/hero-himpil.webp`. `node 
 
 The logo (mark, "himpil" wordmark, Baybayin line) is the **official artwork**, traced from the photo by `node scripts/extract-logo.mjs` into `src/brand/logo-official.json`. Then `npm run brand` rebuilds the favicon and app icons from it.
 If you get the logo as an original vector file (SVG/AI/PDF), use that instead: it will be a little crisper than the trace.
+
+## Backgrounds
+
+Built from the HIMPIL / KIT palette, with a Filipino theme: *himpil* comes from *himpilan*, a stopping place.
+
+- **Sawali** (`public/brand/sawali.svg`): a faint woven-bamboo texture behind every page, like the wall of a bahay kubo.
+- **Coffee branches** in the top corners, engraved like the kit's header.
+- **A Baybayin word for each page**, large and faint behind the content, and spelled out at the end of the page with its meaning. Home is *himpilan*, Card *kape*, Rewards *gantimpala*, Activity *alaala*, Profile *kaibigan*, Scan *salamat*, sign-in *mabuhay* and the barista console *timpla*. The words are listed in `src/components/brand/Backdrop.tsx` and set in Noto Sans Tagalog.
+- **Baybayin letter pattern** on the dark surfaces (the Scan band and the sign-in photo).
 
 ## Other brand assets: replace with the official files
 
