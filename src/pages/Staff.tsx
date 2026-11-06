@@ -64,9 +64,10 @@ function Scanner({ onCode }: { onCode: (code: string) => void }) {
   return (
     <div>
       <div className="relative aspect-square overflow-hidden rounded-2xl bg-espresso">
-        <video ref={video} className={`size-full object-cover ${active ? '' : 'invisible'}`} muted playsInline />
+        {/* Never hide the video itself: qr-scanner collapses a hidden video to 0×0 and drops its overlay. */}
+        <video ref={video} className="size-full object-cover" muted playsInline />
         {!active && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 p-6 text-center text-cream/80">
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-espresso p-6 text-center text-cream/80">
             <Camera className="size-10" strokeWidth={1.3} aria-hidden />
             <p className="text-sm">Point the camera at the customer’s Himpil QR code.</p>
             {problem && <p className="text-xs text-latte">{problem}</p>}
